@@ -38,27 +38,30 @@ EquipTrack is designed to manage a diverse range of critical operational equipme
 
 ## 🏗️ Architecture & Deployment
 
-The system is built as a fully self-contained Docker environment, ensuring "zero-dependency" deployment on any host machine.
+The system is built as a fully self-contained Docker environment, ensuring "zero-dependency" deployment on any host machine running Docker.
 
 - **Stack**: Next.js 15 (App Router), SQLite, Prisma ORM.
-- **Deployment**: Single-service architecture via Docker Compose.
+- **Deployment**: Single-service architecture via Docker.
 
-### Quick Start (Ubuntu Linux)
+### Quick Start
 
-1. **Clone & Navigate**:
+1. **Using Docker Run or Docker Compose**:
    ```bash
-   git clone https://github.com/teamturnersolutions/BJs-EquipTrack.git
-   cd BJs-EquipTrack
+   docker run -d \
+    --name equiptrack \
+    -p 9002:9002 \
+    -v equiptrack_prisma:/app/prisma \
+    -e DATABASE_URL="file:/app/prisma/dev.db" \
+    -e NODE_ENV=production \
+    -e TZ=America/New_York \
+    --restart unless-stopped \
+    teamturnersolutions/equiptrack:2.0
    ```
+OR
+```bash
 
-2. **Launch**:
-   ```bash
-   chmod +x Docker.sh
-   ./Docker.sh
-   docker compose up --build
-   ```
 
-3. **Access**:
+2. **Browser Access**:
    Open **[http://localhost:9002](http://localhost:9002)** in your browser.
 
 ---
