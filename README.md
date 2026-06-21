@@ -46,20 +46,22 @@ The system is built as a fully self-contained Docker environment, ensuring "zero
 ### Quick Start
 
 1. **Using Docker Run or Docker Compose**:
-   ```bash
-   docker run -d \
-    --name equiptrack \
-    -p 9002:9002 \
-    -v equiptrack_prisma:/app/prisma \
-    -e DATABASE_URL="file:/app/prisma/dev.db" \
-    -e NODE_ENV=production \
-    -e TZ=America/New_York \
-    --restart unless-stopped \
-    teamturnersolutions/equiptrack:2.0
-   ```
+ ```bash
+ docker run -d \
+  --name equiptrack \
+  -p 9002:9002 \
+  -v equiptrack_prisma:/app/prisma \
+  -e DATABASE_URL="file:/app/prisma/dev.db" \
+  -e NODE_ENV=production \
+  -e TZ=America/New_York \
+  --restart unless-stopped \
+  teamturnersolutions/equiptrack:2.0
+ ```
 OR
-```bash
 
+```bash
+docker compose up -d \
+```
 
 2. **Browser Access**:
    Open **[http://localhost:9002](http://localhost:9002)** in your browser.
