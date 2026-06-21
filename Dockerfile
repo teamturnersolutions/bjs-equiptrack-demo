@@ -23,6 +23,10 @@ RUN npx prisma generate
 
 # Ensure database schema is applied for prerendering
 RUN npx prisma db push --accept-data-loss
+
+# Seed the database from the CSV files so it is pre-populated inside the image
+RUN npx tsx scripts/migrate-csv.ts
+
 RUN mkdir -p /app/prisma-init && cp /app/prisma/dev.db /app/prisma-init/dev.db || true
 
 # Build Next.js
