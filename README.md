@@ -3,7 +3,7 @@
 **Professional Equipment & Inventory Management System**
 
 > [!IMPORTANT]
-> **Work in Progress (WIP)**: This application is currently under active development and is intended for **Internal Use Only** within the BJ's organization.
+> **Internal Use Only** within the BJ's organization.
 
 BJ's EquipTrack is a streamlined, high-performance inventory management solution designed to simplify the daily routine of checking equipment in and out. By focusing on a "less is more" UI philosophy, the app relieves the operational burden on end-users while maintaining rigorous tracking and accountability.
 
@@ -12,7 +12,7 @@ BJ's EquipTrack is a streamlined, high-performance inventory management solution
 ## ✨ Core Features
 
 ### 📋 Versatile Inventory Management
-EquipTrack is designed to manage a diverse range of critical operational equipment, including:
+EquipTrack is designed to manage a diverse range of critical operational equipment, including but not limited to:
 - **Zebra Handheld RF Units** (Tagged: `RF`)
 - **Personnel Mobile Devices** (Tagged: `iPad`)
 - **Handheld Walkie Talkies** (Tagged: `Radio`)
@@ -62,7 +62,9 @@ OR
 ```bash
 docker compose up -d \
 ```
+Run the docker compose comman after cloning the repository.
 
+Then simply open the browser:
 2. **Browser Access**:
    Open **[http://localhost:9002](http://localhost:9002)** in your browser.
 
@@ -70,9 +72,8 @@ docker compose up -d \
 
 ## 🚀 Future Roadmap
 
-We are constantly evolving to make equipment tracking even faster and more integrated:
+This project is constantly evolving to make equipment tracking even faster and more integrated:
 - **NFC Integration**: Support for NFC tags to enable "tap-and-go" check-ins.
-- **Android APK**: Mobile-native version for dedicated handheld devices.
 - **AI Agent Integration**: An intelligent assistant to provide proactive instructions and resolve anomalous inventory issues.
 
 ---
