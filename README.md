@@ -2,7 +2,7 @@
 
 <img src="BJs-Logo/BJs-logo.png" alt="BJ's Wholesale Club" width="120" />
 
-# BJ's EquipTrack
+# EquipTrack
 
 ### Intelligent Equipment & Inventory Management
 
@@ -11,7 +11,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](#-technical-overview)
 [![Status](https://img.shields.io/badge/Status-Production_Ready-brightgreen)](#)
 
-**A streamlined, high-performance solution for tracking equipment across club operations — built to eliminate manual processes and reduce equipment loss.**
+**A streamlined solution for tracking equipment anywhere.**
+
+**Built to eliminate manual processes and reduce equipment loss.**
 
 </div>
 
@@ -19,7 +21,9 @@
 
 ## 📺 Application Preview
 
-https://github.com/user-attachments/assets/BJs-EquipTrack-Application-Preview.mp4
+<video src="BJs-EquipTrack-Application-Preview.mp4" controls width="100%">
+  Your browser does not support the video tag.
+</video>
 
 > *The EquipTrack dashboard in action — equipment check-out, check-in, and real-time inventory tracking.*
 
@@ -189,11 +193,3 @@ Planned enhancements to further streamline club operations:
 *For support, feature requests, or deployment assistance — contact the development team.*
 
 </div>
-
-
-
-
-
-
-
-
