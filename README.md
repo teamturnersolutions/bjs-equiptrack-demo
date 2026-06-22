@@ -45,7 +45,7 @@ The system is built as a fully self-contained Docker environment, ensuring "zero
 
 ### Quick Start
 
-1. **Using Docker Run or Docker Compose**:
+1. Choose your method of deployment, **Using Docker Run or Docker Compose**:
  ```bash
  docker run -d \
   --name equiptrack \
@@ -57,12 +57,11 @@ The system is built as a fully self-contained Docker environment, ensuring "zero
   --restart unless-stopped \
   teamturnersolutions/equiptrack:2.0
  ```
-OR
+Or run the docker compose comman after cloning the repository.
 
 ```bash
 docker compose up -d \
 ```
-Run the docker compose comman after cloning the repository.
 
 Then simply open the browser:
 2. **Browser Access**:
