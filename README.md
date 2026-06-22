@@ -25,6 +25,14 @@
   Your browser does not support the video tag.
 </video>
 
+<div align="center">
+
+[![Watch the Demo](Equiptrack-Dashboard.png)](BJs-EquipTrack-Application-Preview.mp4)
+
+*▶️ Click the image above to watch the full application demo*
+
+</div>
+
 > *The EquipTrack dashboard in action — equipment check-out, check-in, and real-time inventory tracking.*
 
 ---
