@@ -2,38 +2,48 @@
 
 <img src="BJs-Logo/BJs-logo.png" alt="BJ's Wholesale Club" width="120" />
 
-# EquipTrack
+# BJ's EquipTrack (Presentation Demo)
 
 ### Intelligent Equipment & Inventory Management
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](#-getting-started)
 [![Next.js](https://img.shields.io/badge/Next.js_15-black?logo=next.js&logoColor=white)](#-technical-overview)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](#-technical-overview)
-[![Status](https://img.shields.io/badge/Status-Production_Ready-brightgreen)](#)
+[![Status](https://img.shields.io/badge/Status-Presentation_Demo-blue)](#)
 
-**A streamlined solution for tracking equipment anywhere.**
+**A professional, commercial-grade demonstration environment for BJ's stakeholders.**
 
-**Built to eliminate manual processes and reduce equipment loss.**
+**Built to eliminate manual processes, reduce equipment loss, and streamline shift handoffs.**
 
 </div>
 
 ---
 
-## 📺 Application Preview
+## 📺 Application Preview & Demo Video
 
-<video src="BJs-EquipTrack-Application-Preview.mp4" controls width="100%">
-  Your browser does not support the video tag.
-</video>
+Watch the walkthrough video showing BJ's EquipTrack's barcode scanning, real-time tracking, and administrative capabilities:
 
-<div align="center">
+<p align="center">
+  <video src="BJs-EquipTrack-Application-Preview.mp4" width="100%" controls poster="Equiptrack-Dashboard.png" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    Your browser does not support the video tag.
+  </video>
+</p>
 
-[![Watch the Demo](Equiptrack-Dashboard.png)](BJs-EquipTrack-Application-Preview.mp4)
+---
 
-*▶️ Click the image above to watch the full application demo*
+## 📋 Presentation Overview & Handout Infographic
 
-</div>
+Below is the executive presentation handout outlining the business impact, system capabilities, and deployment architecture of **BJ's EquipTrack**.
 
-> *The EquipTrack dashboard in action — equipment check-out, check-in, and real-time inventory tracking.*
+<p align="center">
+  <a href="equiptrack-handout-v2.jpeg" target="_blank">
+    <img src="equiptrack-handout-v2.jpeg" alt="BJ's EquipTrack Presentation Handout" width="85%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);" />
+  </a>
+</p>
+
+<p align="center">
+  <em>🔍 Click the image above or open <a href="equiptrack-handout-v2.jpeg">equiptrack-handout-v2.jpeg</a> to view the full high-resolution handout.</em>
+</p>
 
 ---
 
@@ -115,9 +125,9 @@ Download complete transaction history as **CSV** for auditing, compliance, or in
 
 ---
 
-## 🏗️ Technical Overview
+## 🏗️ Technical Overview & Architecture
 
-> *For IT and operations stakeholders evaluating deployment.*
+Designed to be simple to deploy and highly reliable under heavy load.
 
 | Component | Details |
 |:---|:---|
@@ -146,42 +156,47 @@ graph LR
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Run the Demo Environment
 
-EquipTrack is delivered as a **self-contained Docker image** — no software installation, no database setup, no configuration needed.
+This demo repository is designed to be **run-ready** for immediate presentation. The SQLite database is automatically built and pre-seeded with clean mock team members and equipment.
 
-### Option 1: Docker Run (Recommended)
+### Option 1: Docker Compose (Quickest)
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/teamturnersolutions/bjs-equiptrack-demo.git
+   cd bjs-equiptrack-demo
+   ```
+2. Start the container:
+   ```bash
+   docker compose up -d
+   ```
+
+### Option 2: Docker Run
 
 ```bash
 docker run -d \
-  --name equiptrack \
+  --name equiptrack-demo \
   -p 9002:9002 \
-  -v equiptrack_prisma:/app/prisma \
+  -v equiptrack_demo_prisma:/app/prisma \
   -e DATABASE_URL="file:/app/prisma/dev.db" \
   -e NODE_ENV=production \
   -e TZ=America/New_York \
   --restart unless-stopped \
-  teamturnersolutions/equiptrack:2.0
+  teamturnersolutions/equiptrack-demo:latest
 ```
 
-### Option 2: Docker Compose
+### Accessing the Web Interface
 
-```bash
-git clone https://github.com/teamturnersolutions/bjs-equiptrack-demo.git
-cd bjs-equiptrack-demo
-docker compose up -d
-```
-
-### Then open your browser:
-
+Open your browser and navigate to:
 🌐 **[http://localhost:9002](http://localhost:9002)**
 
-> [!TIP]
-> The application comes **pre-loaded with sample data** so you can explore all features immediately.
+> [!NOTE]
+> **Pre-Seeded Accounts & Data:** The database comes pre-populated with realistic mock employees (e.g. *Javon Adams*, *James Turner*, *Roberto Coldutty*) and typical warehouse club assets, allowing you to demo check-out and check-in functionality instantly.
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Roadmap & Next Steps
 
 Planned enhancements to further streamline club operations:
 
