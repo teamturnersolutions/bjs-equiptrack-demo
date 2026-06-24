@@ -726,7 +726,7 @@ export default function OverviewPage() {
           <div className="flex gap-8 text-xs text-gray-500">
             <a href="https://github.com/teamturnersolutions/BJs-EquipTrack" target="_blank" className="hover:text-white transition-colors">Main Repository</a>
             <a href="https://github.com/teamturnersolutions/bjs-equiptrack-demo" target="_blank" className="hover:text-white transition-colors">Demo Repository</a>
-            <a href="mailto:dev@teamturnersolutions.com" className="hover:text-white transition-colors">Support Email</a>
+            <a href="mailto:jturner1@bjs.com" className="hover:text-white transition-colors">Support Email</a>
           </div>
         </div>
       </footer>
