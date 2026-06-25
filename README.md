@@ -27,7 +27,7 @@
 [![Live Demo](https://img.shields.io/badge/Live_Demo-equiptrack.teamturnersolutions.com-FF1744?style=for-the-badge&logo=google-cloud&logoColor=white)](https://equiptrack.teamturnersolutions.com)
 
 *Hosted on Google Cloud Run — explore the full application with pre-loaded sample data.*
-If you Receive a Bad Gateway Notification, refresh your browser. The load balancer is set to 0 to keep costs at a minimum, so that the instance is not always running.
+### If you Receive a Bad Gateway Notification, refresh your browser. The load balancer is set to 0 to keep costs at a minimum, so that the instance is not always running.
 
 </div>
 
