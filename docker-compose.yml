@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: teamturnersolutions/equiptrack-demo
+    image: teamturnersolutions/equiptrack:demov3
     ports:
       - "9002:9002"
     volumes:
