@@ -2,217 +2,222 @@
 
 <img src="BJs-Logo/BJs-logo.png" alt="BJ's Wholesale Club" width="120" />
 
-# BJ's EquipTrack (Presentation Demo)
+# BJ's EquipTrack
 
 ### Intelligent Equipment & Inventory Management
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](#-getting-started)
-[![Next.js](https://img.shields.io/badge/Next.js_15-black?logo=next.js&logoColor=white)](#-technical-overview)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](#-technical-overview)
-[![Status](https://img.shields.io/badge/Status-Presentation_Demo-blue)](#)
+[![Architecture](https://img.shields.io/badge/Architecture-AMD64%20%7C%20ARM64-blue?logo=docker&logoColor=white)](#-deployment-philosophy)
+[![Next.js](https://img.shields.io/badge/Next.js_15-black?logo=next.js&logoColor=white)](#-architecture-overview)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](#-architecture-overview)
+[![Status](https://img.shields.io/badge/Status-Production_Ready-brightgreen)](#)
 
-**A professional, commercial-grade demonstration environment for BJ's stakeholders.**
-
-**Built to eliminate manual processes, reduce equipment loss, and streamline shift handoffs.**
+**A streamlined, lightweight platform for tracking equipment and inventory across operational environments.**
 
 </div>
 
 ---
 
-## 📺 Application Preview & Demo Video
+## 🌐 Live Demo
 
-Watch the walkthrough video showing BJ's EquipTrack's barcode scanning, real-time tracking, and administrative capabilities:
+<div align="center">
 
-<p align="center">
-  <video src="BJs-EquipTrack-Application-Preview.mp4" width="100%" controls poster="Equiptrack-Dashboard.png" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-    Your browser does not support the video tag.
-  </video>
-</p>
+### **[▶️ Launch EquipTrack Demo](https://equiptrack.teamturnersolutions.com)**
 
----
+[![Live Demo](https://img.shields.io/badge/Live_Demo-equiptrack.teamturnersolutions.com-FF1744?style=for-the-badge&logo=google-cloud&logoColor=white)](https://equiptrack.teamturnersolutions.com)
 
-## 📋 Presentation Overview & Handout Infographic
+*Hosted on Google Cloud Run — explore the full application with pre-loaded sample data.*
 
-Below is the executive presentation handout outlining the business impact, system capabilities, and deployment architecture of **BJ's EquipTrack**.
-
-<p align="center">
-  <a href="equiptrack-handout-v2.jpeg" target="_blank">
-    <img src="equiptrack-handout-v2.jpeg" alt="BJ's EquipTrack Presentation Handout" width="85%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);" />
-  </a>
-</p>
-
-<p align="center">
-  <em>🔍 Click the image above or open <a href="equiptrack-handout-v2.jpeg">equiptrack-handout-v2.jpeg</a> to view the full high-resolution handout.</em>
-</p>
+</div>
 
 ---
 
-## 💡 The Problem
+## 📋 Executive Summary
 
-Managing shared equipment across a busy warehouse club floor is a daily challenge:
+**EquipTrack** is more than a simple inventory application. It is an **Operational Visibility Platform** designed to manage equipment, assignments, locations, inventory records, and future operational workflows through a modern, lightweight architecture. 
 
-| Pain Point | Impact |
-|:---|:---|
-| **Paper sign-out sheets** get lost, damaged, or ignored | No reliable record of who has what |
-| **No accountability** when equipment is damaged or missing | Increased replacement costs |
-| **Slow manual processes** for checking equipment in and out | Wasted labor hours every shift |
-| **No visibility** into equipment status at a glance | Supervisors can't make informed decisions |
+In busy warehouse clubs, distribution centers, and maintenance environments, operational efficiency depends heavily on the availability and traceability of shared equipment (e.g., RF units, hand grinders, specialized tools). EquipTrack eliminates the operational friction of paper logs, reduces replacement costs due to lost or unaccounted-for assets, and provides management teams with real-time insight into what equipment is currently in the field, who is using it, and when it is expected back.
+
+By packaging robust enterprise-grade practices into an accessible, low-overhead solution, EquipTrack enables companies to digitize their inventory workflows instantly without the complexity or high maintenance costs of traditional asset management suites.
 
 ---
 
-## ✅ The Solution
+## 🏗️ Architecture Overview
 
-**EquipTrack** replaces manual tracking with a fast, intuitive digital system purpose-built for the warehouse floor.
+EquipTrack uses a modern, lightweight, full-stack monolithic architecture designed for fast response times and zero-overhead deployments.
 
-### 🎯 Key Capabilities
+### System Data Flow
 
-<table>
-<tr>
-<td width="50%">
+<div align="center">
 
-#### ⚡ Rapid Barcode Scanning
-Equipment check-out and check-in in **under 5 seconds** using Code128 barcode scanning. Designed for speed — no training required.
+![System Data Flow](systemDataFlow.jpeg)
 
-</td>
-<td width="50%">
+</div>
 
-#### 📋 Multi-Equipment Tracking
-Manages **RF units, iPads, radios, cameras, banders, grinders** and any other club equipment — all from one interface.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-#### 🔍 Full Accountability Trail
-Every check-out and check-in is logged with **who, what, and when**. Instantly identify the last user of any piece of equipment.
-
-</td>
-<td width="50%">
-
-#### 📥 Bulk Data Import
-Onboard hundreds of team members or inventory items in seconds via **CSV upload** — no manual data entry needed.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-#### 📊 Real-Time Dashboard
-At-a-glance view of all equipment status — **available, checked out, and by whom**. Supervisors always know what's in the field.
-
-</td>
-<td width="50%">
-
-#### 📤 Export & Reporting
-Download complete transaction history as **CSV** for auditing, compliance, or integration with existing reporting workflows.
-
-</td>
-</tr>
-</table>
+### Architectural Layer Responsibilities
+1. **User / Operator:** The browser interface, optimized for mobile phones, rugged warehouse scanners, and desktop terminals. It handles client-side input like barcode scanner inputs.
+2. **Next.js:** The framework driving the application. It serves pre-rendered pages via React Server Components (RSCs) for high speed, manages layouts, and coordinates routing between pages.
+3. **Application Logic:** The core business rules of the platform (implemented as Next.js Server Actions). It validates that items are available before a checkout, coordinates multi-item transactions, and formats audit logs.
+4. **Prisma ORM:** The data access layer. It translates TypeScript code into optimized database queries, ensuring type safety and handling automated schema migrations.
+5. **SQLite:** The physical database engine. It runs in-process as a lightweight, zero-configuration file, offering high speed and simple backups without the overhead of external database servers.
 
 ---
 
-## 📈 Business Impact
+## 💡 Technology Explained for Everyone
 
-| Metric | Before EquipTrack | With EquipTrack |
-|:---|:---|:---|
-| **Equipment check-out time** | 2–5 minutes (paper) | < 5 seconds (scan) |
-| **Damage accountability** | Unknown | 100% traceable |
-| **Shift-start equipment distribution** | Chaotic, inconsistent | Streamlined, auditable |
-| **Equipment loss visibility** | Discovered weeks later | Real-time awareness |
-| **Data entry for new hires/equipment** | Manual, one-by-one | Bulk CSV import |
+For non-technical stakeholders, software terms can feel like a foreign language. Here is how the EquipTrack system works, explained using familiar warehouse and office analogies:
 
----
+| Technical Concept | Everyday Analogy | What it Actually Does in EquipTrack |
+| :--- | :--- | :--- |
+| **Next.js** | **The Building Manager** | Manages the overall app structure, hosts the pages, and directs traffic to ensure users get what they need quickly. |
+| **Routing** | **Hallways & Room Numbers** | The paths in the web address (like `/checkout` or `/history`) that guide users to specific rooms or screens. |
+| **React Server Components** | **Office Staff Preparing Your Packet** | Behind-the-scenes staff who pre-assemble all requested data on the server before sending the completed page to your screen. |
+| **Server Actions** | **Submitting a Request Form** | A secure window where you submit a form (like checking out a device) to be processed directly by the back office. |
+| **Application Logic** | **Company Policies** | The rules of the business, such as "An employee cannot check out an RF scanner if someone else is currently holding it." |
+| **Prisma ORM** | **The Translator** | An interpreter who translates requests from the office staff into the language that the records storage clerk understands. |
+| **Database Models** | **Filing Cabinet Labels** | The designated labels on drawer fronts (e.g., "Employees", "Equipment") that define what goes where. |
+| **Queries** | **The Filing Clerk** | The act of going into the records room to pull out specific files (e.g., "Get me the history of checked-out iPads"). |
+| **Migrations** | **Renovating the Filing System** | Reorganizing the files or adding new drawers to the cabinets without losing or scrambling any of the existing papers. |
+| **SQLite** | **The Filing Cabinet** | The physical cabinet where all files, records, and logs are organized and stored in one unit. |
+| **Tailwind CSS** | **Interior Design** | The paint, font choices, buttons, and visual styling that make the application clean, modern, and pleasant to use. |
+| **Docker** | **The Shipping Container** | A standard container holding the office, furniture, and records cabinet. It allows you to ship the entire application and run it anywhere instantly. |
+| **SQLite Database File** | **The Records Room** | The specific secure room inside the shipping container where the filing cabinet resides, keeping all database records safe. |
 
-## 🏗️ Technical Overview & Architecture
+<div align="center">
 
-Designed to be simple to deploy and highly reliable under heavy load.
+![EquipTrack Technology Analogy](non-technicalBreakdown.jpeg)
 
-| Component | Details |
-|:---|:---|
-| **Architecture** | Full-stack monolith — single containerized application |
-| **Frontend** | Next.js 15 (React 19) with responsive, mobile-friendly UI |
-| **Database** | SQLite — embedded, zero-configuration, file-based |
-| **ORM** | Prisma 6 — type-safe data access with migration support |
-| **Containerization** | Docker — fully self-contained, runs on any machine with Docker installed |
-| **Port** | `9002` |
-| **Data Persistence** | Docker volume mount ensures data survives container restarts |
-
-### System Architecture
-
-```mermaid
-graph LR
-    User([👤 Club Staff]) -->|Browser| App
-    
-    subgraph Docker["Docker Container"]
-        App[Next.js Application] --> Actions[Server Actions]
-        Actions --> Prisma[Prisma ORM]
-        Prisma --> DB[(SQLite Database)]
-    end
-    
-    Admin([👔 Manager]) -->|Export CSV| App
-```
+</div>
 
 ---
 
-## 🚀 Run the Demo Environment
+## 👔 Administrative Portal
 
-This demo repository is designed to be **run-ready** for immediate presentation. The SQLite database is automatically built and pre-seeded with clean mock team members and equipment.
+To support daily business operations, EquipTrack includes a dedicated **Administrative Portal**. This panel is designed for managers, team leads, and IT administrators who oversee inventory health.
 
-### Option 1: Docker Compose (Quickest)
+### Accessing the Portal
+Authorized personnel can access the Administrative Portal by appending `/admin` to the application's base URL:
+* **Local Environment:** [http://localhost:9002/admin](http://localhost:9002/admin)
+* **Production / Demo Environment:** [https://equiptrack.teamturnersolutions.com/admin](https://equiptrack.teamturnersolutions.com/admin)
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/teamturnersolutions/bjs-equiptrack-demo.git
-   cd bjs-equiptrack-demo
-   ```
-2. Start the container:
-   ```bash
-   docker compose up -d
-   ```
+### Core Administrative Functions
+* **Data Correction:** Edit incorrect entries, clean up user profiles, and adjust timestamp records when employees forget to check items in.
+* **Equipment Management:** Add new assets, update names, write off lost units, or update status indicators.
+* **Employee Management:** Administer the roster of authorized team members and manage department profiles.
+* **Assignment Administration:** Overwrite current assignments and manually return items to stock.
+* **Operational Maintenance:** Run diagnostic checks and manage bulk imports of data.
 
-### Option 2: Docker Run
+> [!NOTE]
+> To enable rapid local onboarding and testing, the initial administrative functions do not require login credentials. Planned updates will introduce authentication, role-based access control (RBAC), and immutable audit logs for administrative actions.
+
+---
+
+## 📦 Deployment Philosophy
+
+EquipTrack is designed around the concept of an **"Application in a Box."** We leverage **Docker containerization** to pack the entire application, database structure, and dependencies into a single deployment unit.
+
+### Why We Choose Docker
+* **Consistent Deployments:** Eliminates the "it works on my machine" problem. The application runs in the exact same environment during local development as it does in cloud production.
+* **Self-Contained Environment:** You do not need to install Node.js, database drivers, or web servers on the host system. Docker handles it all internally.
+* **Rapid Onboarding:** Spin up a fully functional production instance with a single terminal command in under two minutes.
+* **Cross-Platform Support:** The container image is built natively for both standard Intel/AMD servers (`AMD64`) and Apple Silicon or Graviton servers (`ARM64`), guaranteeing zero-emulation overhead.
+
+---
+
+## 🚀 Getting Started
+
+Launch the platform locally or in your cloud environment with either of these zero-configuration methods.
+
+### Option 1: Run with Docker (Recommended)
 
 ```bash
 docker run -d \
-  --name equiptrack-demo \
+  --name equiptrack \
   -p 9002:9002 \
-  -v equiptrack_demo_prisma:/app/prisma \
+  -v equiptrack_data:/app/prisma \
   -e DATABASE_URL="file:/app/prisma/dev.db" \
   -e NODE_ENV=production \
   -e TZ=America/New_York \
   --restart unless-stopped \
-  teamturnersolutions/equiptrack-demo:latest
+  teamturnersolutions/equiptrack:demo
 ```
 
-### Accessing the Web Interface
+### Option 2: Run with Docker Compose
 
-Open your browser and navigate to:
+1. Clone the repository and navigate to the directory:
+   ```bash
+   git clone https://github.com/teamturnersolutions/bjs-equiptrack-demo.git
+   cd bjs-equiptrack-demo
+   ```
+2. Launch the services:
+   ```bash
+   docker compose up -d
+   ```
+
+### Accessing the Interface
+Once the container is running, open your web browser and navigate to:
 🌐 **[http://localhost:9002](http://localhost:9002)**
 
-> [!NOTE]
-> **Pre-Seeded Accounts & Data:** The database comes pre-populated with realistic mock employees (e.g. *Javon Adams*, *James Turner*, *Roberto Coldutty*) and typical warehouse club assets, allowing you to demo check-out and check-in functionality instantly.
+> [!TIP]
+> The demo container is **pre-populated with sample items and team members** so you can test checking out, scanning, and viewing historical logs immediately.
 
 ---
 
-## 🗺️ Roadmap & Next Steps
+## 🎯 Vision
 
-Planned enhancements to further streamline club operations:
+EquipTrack is built to scale alongside operational needs. Our development roadmap bridges current execution needs with upcoming smart workflows.
 
-| Feature | Description | Status |
-|:---|:---|:---|
-| **NFC Integration** | Tap-and-go check-ins using NFC tags on equipment | 🔜 Planned |
-| **AI Agent** | Intelligent assistant for proactive equipment issue resolution | 🔜 Planned |
-| **Mobile App** | Dedicated Android application for handheld devices | 📋 Backlog |
-| **Multi-Location** | Support for tracking across multiple club locations | 📋 Backlog |
+### Current Capabilities
+* **Equipment Management:** Define, catalog, and track operational items with real-time availability statuses.
+* **Employee Assignments:** Pair equipment directly with team members to create clear checkout records and establish user accountability.
+* **Location Tracking:** Monitor which zones, departments, or shifts are utilizing specific assets.
+* **Administrative Operations:** Edit transaction histories, correct records, and manage lists of items and team members via a dedicated admin interface.
+* **Reporting:** Instantly export historical logs to standard CSV formats for compliance audits and performance reporting.
+
+### Future Vision & AI-Assisted Workflows
+As the platform evolves, it will integrate advanced AI capabilities to streamline warehouse floor operations and eliminate manual terminal interactions.
+
+* **Phase 1: Intelligent Assistant (Conversational Querying)**
+  Initial integration focuses on an intelligent natural language assistant that allows users to query database states conversationally. 
+  
+  *Examples:*
+  * *"Show me all assigned forklifts."*
+  * *"Who has asset RF# 55"*
+  * *"What equipment is due for inspection?"*
+
+* **Phase 2: AI Agent (Voice-Activated Task Execution)**
+  The long-term roadmap features a high-performance **AI Agent** capable of executing tasks directly on behalf of the operator. By leveraging voice recognition and a structured command format (`[Wake Word] + [Equipment] + [User]`), operators can perform hands-free, high-speed transactions. This voice-driven agentic execution will speed up the check-in and check-out processes exponentially, allowing workers to process equipment on the move without stopping to manually interact with a touchscreen or keyboard.
+
+<div align="center">
+
+![EquipTrack AI Vision](futureVision.jpeg)
+
+</div>
+
+Beyond AI integrations, the future vision includes proactive **Preventative Maintenance Tracking**, automated **Asset Lifecycle Management** (tracking cumulative operational hours and wear metrics), and **Workflow Automation** (auto-alerting supervisors when stock levels drop).
+
+---
+
+## 🗺️ Roadmap
+
+The roadmap guides EquipTrack from its current lightweight state to an enterprise-grade operational hub.
+
+| Current Capabilities (In Production) | Planned Enhancements (Development Pipeline) |
+| :--- | :--- |
+| **Equipment Tracking** (Live status updates) | **Role-Based Access Control** (Secure logins & permissions) |
+| **Assignments** (Mapping equipment to members) | **Audit Logging** (Immutable records of administrative edits) |
+| **Administrative Portal** (Manual status corrections) | **Advanced Reporting** (Usage trends & utilization charts) |
+| **SQLite Persistence** (Zero-configuration file DB) | **PostgreSQL Support** (For high-concurrency enterprise deployments) |
+| **Docker Deployment** (Native AMD64 & ARM64 builds) | **Mobile Enhancements** (Native scanner integrations & offline sync) |
+| **Bulk Data Import** (Import members/items via CSV) | **AI Assistant Integration** (Natural language query interface) |
+| | **Preventative Maintenance** (Inspections & lifecycle tracking) |
 
 ---
 
 <div align="center">
 
-**Built by [Team Turner Solutions](https://github.com/teamturnersolutions)**
+**Developed by [Team Turner Solutions](https://github.com/teamturnersolutions)**
 
-*For support, feature requests, or deployment assistance — contact the development team.*
+*For support, feature requests, or deployment assistance, contact the development team.*
 
 </div>
