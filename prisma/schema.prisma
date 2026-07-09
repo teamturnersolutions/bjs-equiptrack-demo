@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -10,6 +11,8 @@ datasource db {
 model TeamMember {
   id             Int             @id @default(autoincrement())
   name           String
+  department     String?         // Added
+  status         String?         // Added
   inventoryItems InventoryItem[]
 }
 
@@ -21,14 +24,26 @@ model InventoryItem {
   checkedOutById Int?
   checkedOutDate String?
   checkedInDate  String?
+  assetNumber    String?     // Added
+  serialNumber   String?     // Added
+  locationId     Int?        // Added
+  location       Location?   @relation(fields: [locationId], references: [id])
   teamMember     TeamMember? @relation(fields: [checkedOutById], references: [id])
+}
+
+model Location {
+  id             Int             @id @default(autoincrement())
+  building       String
+  department     String
+  storageArea    String
+  inventoryItems InventoryItem[]
 }
 
 model InventoryLog {
   id             Int      @id @default(autoincrement())
   itemId         Int
   itemName       String
-  action         String // "CHECKOUT" or "CHECKIN"
+  action         String // "CHECKOUT", "CHECKIN", "REASSIGN", "RETURN", "CORRECT"
   teamMemberId   Int?
   teamMemberName String?
   timestamp      DateTime @default(now())
