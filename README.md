@@ -18,21 +18,6 @@
 
 ---
 
-## 🌐 Live Demo
-
-<div align="center">
-
-### **[▶️ Launch EquipTrack Demo](https://equiptrack.teamturnersolutions.com)**
-
-[![Live Demo](https://img.shields.io/badge/Live_Demo-equiptrack.teamturnersolutions.com-FF1744?style=for-the-badge&logo=google-cloud&logoColor=white)](https://equiptrack-app.teamturnersolutions.com)
-
-*Hosted on Google Cloud Run — explore the full application with pre-loaded sample data.*
-### If you Receive a Bad Gateway Notification, refresh your browser. The load balancer is set to 0 to keep costs at a minimum, so that the instance is not always running.
-
-</div>
-
----
-
 ## 📋 Executive Summary
 
 **EquipTrack** is more than a simple inventory application. It is an **Operational Visibility Platform** designed to manage equipment, assignments, locations, inventory records, and future operational workflows through a modern, lightweight architecture. 
@@ -98,8 +83,6 @@ To support daily business operations, EquipTrack includes a dedicated **Administ
 
 ### Accessing the Portal
 Authorized personnel can access the Administrative Portal by appending `/admin` to the application's base URL:
-* **Local Environment:** [http://localhost:9002/admin](http://localhost:9002/admin)
-* **Production / Demo Environment:** [https://equiptrack.teamturnersolutions.com/admin](https://equiptrack.teamturnersolutions.com/admin)
 
 ### Core Administrative Functions
 * **Data Correction:** Edit incorrect entries, clean up user profiles, and adjust timestamp records when employees forget to check items in.
@@ -140,7 +123,7 @@ docker run -d \
   -e NODE_ENV=production \
   -e TZ=America/New_York \
   --restart unless-stopped \
-  teamturnersolutions/equiptrack:demo
+  teamturnersolutions/equiptrack:latest
 ```
 
 ### Option 2: Run with Docker Compose
