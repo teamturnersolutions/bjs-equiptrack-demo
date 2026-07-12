@@ -82,7 +82,7 @@ For non-technical stakeholders, software terms can feel like a foreign language.
 To support daily business operations, EquipTrack includes built-in **Administrative Controls**. These panels are designed for managers, team leads, and IT administrators who oversee inventory health.
 
 ### Accessing Administrative Controls
-In the current demo environment, administrative functions are integrated directly into the primary application interface to simplify onboarding and testing:
+In this production environment, administrative functions are integrated directly into the primary application interface for ease of use:
 - **Add Team Member & Add Inventory Item**: Accessible via slide-out sheets triggered from the top-right controls on the home dashboard or inside specific list views.
 - **Bulk CSV Import**: Triggered from the file upload icon on the home dashboard.
 - **Edit Records**: Managers can edit individual team member details and inventory item records by clicking the pencil/edit icons within the `/members` list and the `/inventory` grid view.
@@ -94,7 +94,7 @@ In the current demo environment, administrative functions are integrated directl
 * **Bulk Data Operations:** Perform rapid local database population using bulk CSV paste formats for items and members.
 
 > [!NOTE]
-> To enable rapid local testing, administrative controls are currently open without login credentials. Future iterations of the platform plan to isolate these functions into a dedicated `/admin` route with role-based access control (RBAC), authentication, and immutable audit logs.
+> Administrative controls are secured behind NextAuth authentication and Role-Based Access Control (RBAC). Every write action is recorded in the central database-driven audit log ledger.
 
 ---
 
@@ -120,12 +120,13 @@ Launch the platform locally or in your cloud environment with either of these ze
 docker run -d \
   --name equiptrack \
   -p 9002:9002 \
-  -v equiptrack_data:/app/prisma \
-  -e DATABASE_URL="file:/app/prisma/dev.db" \
+  -e DATABASE_URL="postgresql://postgres:postgrespassword@postgres:5432/equiptrack?schema=public" \
   -e NODE_ENV=production \
   -e TZ=America/New_York \
+  -e NEXTAUTH_SECRET="bjs-equiptrack-enterprise-secret-2026-key" \
+  -e NEXTAUTH_URL="http://localhost:9002" \
   --restart unless-stopped \
-  teamturnersolutions/equiptrack:latest
+  teamturnersolutions/equiptrack:prodv3
 ```
 
 ### Option 2: Run with Docker Compose
@@ -145,7 +146,7 @@ Once the container is running, open your web browser and navigate to:
 🌐 **[http://localhost:9002](http://localhost:9002)**
 
 > [!TIP]
-> The demo container is **pre-populated with sample items and team members** so you can test checking out, scanning, and viewing historical logs immediately.
+> The production container is **pre-populated with sample items and team members** on startup so you can test checking out, scanning, and viewing historical logs immediately. Log in using `admin@equiptrack.com` / `adminpassword`.
 
 ---
 

@@ -40,7 +40,7 @@ graph TD
 | UI | React 19 + Radix UI + Tailwind CSS v3 |
 | Forms | `react-hook-form` + Zod validation |
 | ORM | Prisma 6.x (6.19.2) |
-| Database | SQLite (file: [prisma/dev.db](file:///c:/Users/teamt/bjs-equiptrack-demo/prisma/dev.db)) |
+| Database | PostgreSQL (containerized service: `equiptrack-db`) |
 | Icons | `lucide-react` |
 | Containerization | Docker (multi-stage) + Docker Compose |
 | Runtime | Node.js 22 Alpine |
@@ -256,13 +256,13 @@ graph LR
 ```
 
 - **Port**: `9002`
-- **Database**: SQLite file mounted via Docker volume at `./prisma:/app/prisma`
-- **Entrypoint** ([docker-entrypoint.sh](file:///c:/Users/teamt/bjs-equiptrack-demo/docker-entrypoint.sh)): Initializes DB if missing, then runs `node server.js`
+- **Database**: PostgreSQL container with pgdata persistent volume
+- **Entrypoint** ([docker-entrypoint.sh](file:///c:/Users/teamt/bjs-equiptrack-demo/docker-entrypoint.sh)): Runs schema updates and seeds defaults, then runs standalone Next.js server
 - **Timezone**: `America/New_York`
-- **Image**: `teamturnersolutions/equiptrack:demov3`
+- **Image**: `teamturnersolutions/equiptrack:prodv3`
 
 > [!NOTE]
-> Because the DB is a **volume-mounted SQLite file**, data persists across container restarts. This is an important operational dependency — if the volume is lost, so is all data.
+> PostgreSQL database data persists within a Docker-managed volume (`pgdata`), protecting database state between container restarts.
 
 ---
 

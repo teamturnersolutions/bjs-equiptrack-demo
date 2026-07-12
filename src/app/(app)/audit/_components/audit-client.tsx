@@ -23,10 +23,10 @@ type AuditResult = {
 
 export function AuditClient({ items }: AuditClientProps) {
   const { toast } = useToast();
-  const [presentItems, setPresentItems] = useState<Set<string>>(new Set());
+  const [presentItems, setPresentItems] = useState<Set<number>>(new Set());
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
 
-  const handleCheckboxChange = (itemId: string, checked: boolean) => {
+  const handleCheckboxChange = (itemId: number, checked: boolean) => {
     setPresentItems((prev) => {
       const newSet = new Set(prev);
       if (checked) {
@@ -124,12 +124,12 @@ export function AuditClient({ items }: AuditClientProps) {
                 className="flex items-center space-x-3 rounded-md border p-4"
               >
                 <Checkbox
-                  id={item.id}
+                  id={item.id.toString()}
                   onCheckedChange={(checked) => handleCheckboxChange(item.id, !!checked)}
                   checked={presentItems.has(item.id)}
                 />
                 <label
-                  htmlFor={item.id}
+                  htmlFor={item.id.toString()}
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex-1 cursor-pointer"
                 >
                   {item.name}

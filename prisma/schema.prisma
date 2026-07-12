@@ -4,31 +4,73 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int            @id @default(autoincrement())
+  email           String         @unique
+  displayName     String?
+  passwordHash    String?        // Hash for local credentials login
+  provider        String         @default("credentials") // "credentials", "github", "google", "microsoft"
+  roleId          Int
+  role            Role           @relation(fields: [roleId], references: [id])
+  active          Boolean        @default(true)
+  lastLogin       DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  department      String?
+  facility        String?
+  employeeNumber  String?
+  repairRecords   RepairRecord[] @relation("Reporter")
+  assignedRepairs RepairRecord[] @relation("Technician")
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  users           User[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
 }
 
 model TeamMember {
   id             Int             @id @default(autoincrement())
   name           String
-  department     String?         // Added
-  status         String?         // Added
+  department     String?
+  status         String?
   inventoryItems InventoryItem[]
 }
 
 model InventoryItem {
-  id             Int         @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
-  status         String
+  status         String         // e.g. "Available", "Assigned", "Returned", "Inspection", "Maintenance", "Tagged Out"
   checkedOutBy   String?
   checkedOutById Int?
   checkedOutDate String?
   checkedInDate  String?
-  assetNumber    String?     // Added
-  serialNumber   String?     // Added
-  locationId     Int?        // Added
-  location       Location?   @relation(fields: [locationId], references: [id])
-  teamMember     TeamMember? @relation(fields: [checkedOutById], references: [id])
+  assetNumber    String?
+  serialNumber   String?
+  locationId     Int?
+  location       Location?      @relation(fields: [locationId], references: [id])
+  teamMember     TeamMember?    @relation(fields: [checkedOutById], references: [id])
+  repairRecords  RepairRecord[]
 }
 
 model Location {
@@ -43,8 +85,37 @@ model InventoryLog {
   id             Int      @id @default(autoincrement())
   itemId         Int
   itemName       String
-  action         String // "CHECKOUT", "CHECKIN", "REASSIGN", "RETURN", "CORRECT"
+  action         String   // "CHECKOUT", "CHECKIN", "REASSIGN", "RETURN", "CORRECT"
   teamMemberId   Int?
   teamMemberName String?
   timestamp      DateTime @default(now())
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  actorId   Int?
+  actorName String?
+  timestamp DateTime @default(now())
+  entity    String
+  action    String
+  prevValue String?
+  newValue  String?
+  notes     String?
+}
+
+model RepairRecord {
+  id             Int           @id @default(autoincrement())
+  itemId         Int
+  item           InventoryItem @relation(fields: [itemId], references: [id])
+  reporterId     Int?
+  reporter       User?         @relation("Reporter", fields: [reporterId], references: [id])
+  createdAt      DateTime      @default(now())
+  category       String
+  severity       String
+  description    String
+  status         String        // "Tagged Out", "Awaiting Repair", "In Repair", "Quality Verification", "Returned to Service"
+  technicianId   Int?
+  technician     User?         @relation("Technician", fields: [technicianId], references: [id])
+  resolution     String?
+  resolutionDate DateTime?
 }

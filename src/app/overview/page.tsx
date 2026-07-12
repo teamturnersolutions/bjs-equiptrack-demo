@@ -126,7 +126,7 @@ export default function OverviewPage() {
           </div>
           <div>
             <span className="font-extrabold text-white text-lg tracking-tight">EquipTrack</span>
-            <span className="text-[#ff1744] font-semibold text-xs ml-1.5 px-2 py-0.5 rounded-full bg-[#ff1744]/10 border border-[#ff1744]/20">DEMO</span>
+            <span className="text-emerald-500 font-semibold text-xs ml-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">PROD</span>
           </div>
         </div>
         
@@ -143,7 +143,7 @@ export default function OverviewPage() {
             Enter App
           </Link>
           <Link href="#simulator" className="hidden sm:inline-flex text-sm font-semibold px-5 py-2.5 rounded-full bg-gradient-to-r from-[#ff1744] to-[#d50000] text-white hover:opacity-95 shadow-lg shadow-[#ff1744]/25 transition-all duration-200">
-            Try Demo
+            Try Simulator
           </Link>
         </div>
       </header>
@@ -431,14 +431,14 @@ export default function OverviewPage() {
             <div className="mt-auto bg-[#ff1744]/5 border border-[#ff1744]/10 rounded-xl p-4 flex gap-3.5 items-start mt-6">
               <AlertCircle className="size-5 text-[#ff1744] shrink-0 mt-0.5" />
               <p className="text-xs text-gray-400 leading-relaxed">
-                <strong>Pre-Seeding Logic:</strong> In the production environment, the database is mounted to a persistent volume. In this presentation demo, the SQLite database is automatically generated and seeded on launch using the local CSV configurations.
+                <strong>Pre-Seeding Logic:</strong> In the production environment, the PostgreSQL database schema is automatically updated on container launch, and seeded with Roles, Permissions, and default data from the CSV configurations if the tables are empty.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- DEMO ASSETS / INFOGRAPHIC PORTFOLIO --- */}
+      {/* --- PRODUCTION ASSETS / INFOGRAPHIC PORTFOLIO --- */}
       <section id="assets" className="relative z-10 max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-extrabold text-white">Presentation Handouts & Media</h2>
@@ -697,17 +697,17 @@ export default function OverviewPage() {
               {openFaq === 2 ? <ChevronUp className="size-5 text-[#ff1744]" /> : <ChevronDown className="size-5 text-gray-500" />}
             </button>
             <div className={`${styles.faqAnswer} ${openFaq === 2 ? styles.faqAnswerActive : ''}`}>
-              EquipTrack supports standard Docker volumes. By mounting the database path using the volume flag (`-v equiptrack_prisma:/app/prisma`), the underlying database file `dev.db` persists on the host machine, surviving updates or unexpected container restarts.
+              EquipTrack utilizes a dedicated PostgreSQL container. Data is persisted to a Docker volume mounted on the database service container (e.g. `pgdata:/var/lib/postgresql/data`), guaranteeing that database state survives container restarts and upgrades.
             </div>
           </div>
 
           <div className={styles.faqItem}>
             <button onClick={() => toggleFaq(3)} className={styles.faqQuestion}>
-              <span>How is pre-populated data loaded in the demo environment?</span>
+              <span>How is pre-populated data loaded in the production environment?</span>
               {openFaq === 3 ? <ChevronUp className="size-5 text-[#ff1744]" /> : <ChevronDown className="size-5 text-gray-500" />}
             </button>
             <div className={`${styles.faqAnswer} ${openFaq === 3 ? styles.faqAnswerActive : ''}`}>
-              The demo Dockerfile contains a build-time command (`RUN npx tsx scripts/migrate-csv.ts`) that reads the pre-configured `team-members.csv` and `inventory.csv` files and populates the SQLite database schema automatically. This guarantees a ready-to-use playground upon launch.
+              The database entrypoint automatically checks if the database is empty on startup. If no records exist, a seeding script (`prisma/seed.js`) runs, setting up default roles, permissions, administrative credentials, and initial assets from CSV files.
             </div>
           </div>
         </div>
@@ -725,7 +725,7 @@ export default function OverviewPage() {
 
           <div className="flex gap-8 text-xs text-gray-500">
             <a href="https://github.com/teamturnersolutions/BJs-EquipTrack" target="_blank" className="hover:text-white transition-colors">Main Repository</a>
-            <a href="https://github.com/teamturnersolutions/bjs-equiptrack-demo" target="_blank" className="hover:text-white transition-colors">Demo Repository</a>
+            <a href="https://github.com/teamturnersolutions/bjs-equiptrack-demo" target="_blank" className="hover:text-white transition-colors">Production Repository</a>
             <a href="mailto:jturner1@bjs.com" className="hover:text-white transition-colors">Support Email</a>
           </div>
         </div>
