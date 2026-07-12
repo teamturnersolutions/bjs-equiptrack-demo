@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcryptjs");
 const fs = require("fs");
 const path = require("path");
 
@@ -118,7 +117,7 @@ async function main() {
   });
 
   if (!existingAdmin) {
-    const passwordHash = await bcrypt.hash("adminpassword", 10);
+    const passwordHash = "$2b$10$J7kUTrYNXGZeecCc6UzWXOv8U98te87wWHU0ncvVHB5P6HvusKwm6";
     await prisma.user.create({
       data: {
         email: adminEmail,
