@@ -204,3 +204,67 @@ export async function bulkAddInventoryItems(items: { name: string, status?: stri
     return { success: false, message: 'Failed to import inventory items.' };
   }
 }
+
+export async function updateInventoryItem(id: number, name: string) {
+  try {
+    if (!name || name.trim() === '') {
+      throw new Error('Item name cannot be empty.');
+    }
+    const trimmedName = name.trim();
+    await prisma.inventoryItem.update({
+      where: { id },
+      data: { name: trimmedName },
+    });
+    
+    // Create an inventory log for correcting the name
+    await prisma.inventoryLog.create({
+      data: {
+        itemId: id,
+        itemName: trimmedName,
+        action: 'CORRECT',
+        teamMemberId: null,
+        teamMemberName: 'System / Admin',
+      }
+    });
+
+    revalidatePath('/');
+    revalidatePath('/inventory');
+    revalidatePath('/checkout');
+    revalidatePath('/checkin');
+    revalidatePath('/history');
+    return { success: true, message: 'Inventory item updated successfully!' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message };
+  }
+}
+
+export async function updateTeamMember(id: number, name: string) {
+  try {
+    if (!name || name.trim() === '') {
+      throw new Error('Name cannot be empty.');
+    }
+    const trimmedName = name.trim();
+    await prisma.$transaction([
+      prisma.teamMember.update({
+        where: { id },
+        data: { name: trimmedName },
+      }),
+      prisma.inventoryItem.updateMany({
+        where: { checkedOutById: id },
+        data: { checkedOutBy: trimmedName },
+      })
+    ]);
+
+    revalidatePath('/');
+    revalidatePath('/checkout');
+    revalidatePath('/checkin');
+    revalidatePath('/inventory');
+    revalidatePath('/history');
+    return { success: true, message: 'Team member updated successfully!' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message };
+  }
+}
+

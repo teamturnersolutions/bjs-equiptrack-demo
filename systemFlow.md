@@ -37,11 +37,11 @@ The user interface, accessible at `http://localhost:9002`, provides dedicated vi
 
 ### 2. **Server Actions**
 
-Next.js Server Actions handle business logic, such as [checkOutEquipment](file:///c:/Users/teamt/Desktop/Project/EquipTrack/src/app/actions.ts#41-101) and [checkInEquipment](file:///c:/Users/teamt/Desktop/Project/EquipTrack/src/app/actions.ts#102-162), providing a secure bridge between the frontend and the database.
+Next.js Server Actions handle business logic, such as [checkOutEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L41-L101) and [checkInEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L102-L162), providing a secure bridge between the frontend and the database.
 
 ### 3. **Prisma ORM & SQLite**
 
-Prisma acts as the data access layer, managing schemas and performing type-safe queries on a local SQLite database file ([dev.db](file:///c:/Users/teamt/Desktop/Project/EquipTrack/prisma/dev.db)). This file is persisted using Docker volumes.
+Prisma acts as the data access layer, managing schemas and performing type-safe queries on a local SQLite database file ([dev.db](file:///c:/Users/teamt/bjs-equiptrack-demo/prisma/dev.db)). This file is persisted using Docker volumes.
 
 ### 4. **Export API**
 

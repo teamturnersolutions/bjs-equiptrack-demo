@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronLeft, UserPlus, PackagePlus, History as HistoryIcon } from 'lucide-react';
+import { ChevronLeft, UserPlus, PackagePlus, History as HistoryIcon, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AddMemberSheet, AddItemSheet } from '@/app/_components/management-sheets';
 
@@ -39,6 +39,11 @@ export function AppHeader({ title }: AppHeaderProps) {
         >
           <PackagePlus className="h-5 w-5 text-primary" />
         </Button>
+        <Button asChild variant="ghost" size="icon" title="Manage Team Roster">
+          <Link href="/members">
+            <Users className="h-5 w-5 text-primary" />
+          </Link>
+        </Button>
         <Button asChild variant="ghost" size="icon" title="View History">
           <Link href="/history">
             <HistoryIcon className="h-5 w-5 text-primary" />
@@ -50,3 +55,4 @@ export function AppHeader({ title }: AppHeaderProps) {
     </header>
   );
 }
+

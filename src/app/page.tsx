@@ -11,7 +11,9 @@ import {
   PackageCheck,
   LayoutGrid,
   ClipboardCheck,
+  Users,
 } from 'lucide-react';
+
 
 const navItems = [
   {
@@ -38,6 +40,12 @@ const navItems = [
     title: 'Transaction History',
     description: 'View a timeline of all inventory actions.',
   },
+  {
+    href: '/members',
+    icon: <Users className="size-8 text-primary" />,
+    title: 'Team Members',
+    description: 'Manage the team roster and update names.',
+  },
 ];
 
 import { History as HistoryIcon } from 'lucide-react';
@@ -62,7 +70,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full max-w-7xl">
         {navItems.map((item) => (
           <Link href={item.href} key={item.href} className="group">
             <Card className="h-full hover:border-primary/80 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">

@@ -77,22 +77,24 @@ For non-technical stakeholders, software terms can feel like a foreign language.
 
 ---
 
-## 👔 Administrative Portal
+## 👔 Administrative Management
 
-To support daily business operations, EquipTrack includes a dedicated **Administrative Portal**. This panel is designed for managers, team leads, and IT administrators who oversee inventory health.
+To support daily business operations, EquipTrack includes built-in **Administrative Controls**. These panels are designed for managers, team leads, and IT administrators who oversee inventory health.
 
-### Accessing the Portal
-Authorized personnel can access the Administrative Portal by appending `/admin` to the application's base URL:
+### Accessing Administrative Controls
+In the current demo environment, administrative functions are integrated directly into the primary application interface to simplify onboarding and testing:
+- **Add Team Member & Add Inventory Item**: Accessible via slide-out sheets triggered from the top-right controls on the home dashboard or inside specific list views.
+- **Bulk CSV Import**: Triggered from the file upload icon on the home dashboard.
+- **Edit Records**: Managers can edit individual team member details and inventory item records by clicking the pencil/edit icons within the `/members` list and the `/inventory` grid view.
 
 ### Core Administrative Functions
-* **Data Correction:** Edit incorrect entries, clean up user profiles, and adjust timestamp records when employees forget to check items in.
-* **Equipment Management:** Add new assets, update names, write off lost units, or update status indicators.
-* **Employee Management:** Administer the roster of authorized team members and manage department profiles.
-* **Assignment Administration:** Overwrite current assignments and manually return items to stock.
-* **Operational Maintenance:** Run diagnostic checks and manage bulk imports of data.
+* **Data Correction:** Clean up user profiles, update names, or adjust records when employees forget to check items in.
+* **Equipment Management:** Register new assets, update equipment names, or modify statuses directly from the inventory list.
+* **Employee Management:** Administer the roster of authorized team members and track their active checkout counts.
+* **Bulk Data Operations:** Perform rapid local database population using bulk CSV paste formats for items and members.
 
 > [!NOTE]
-> To enable rapid local onboarding and testing, the initial administrative functions do not require login credentials. Planned updates will introduce authentication, role-based access control (RBAC), and immutable audit logs for administrative actions.
+> To enable rapid local testing, administrative controls are currently open without login credentials. Future iterations of the platform plan to isolate these functions into a dedicated `/admin` route with role-based access control (RBAC), authentication, and immutable audit logs.
 
 ---
 

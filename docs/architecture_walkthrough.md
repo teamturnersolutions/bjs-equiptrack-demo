@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-This is a **Next.js 16 full-stack monolith** where the database, business logic, and UI all live inside a single application process. Data mutations flow via **Next.js Server Actions** and reads are performed directly in **React Server Components (RSCs)** using **Prisma ORM**.
+This is a **Next.js 15 full-stack monolith** where the database, business logic, and UI all live inside a single application process. Data mutations flow via **Next.js Server Actions** and reads are performed directly in **React Server Components (RSCs)** using **Prisma ORM**.
 
 ---
 
@@ -35,27 +35,29 @@ graph TD
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 (App Router) with Turbopack |
+| Framework | Next.js 15 (App Router) with Turbopack |
 | Language | TypeScript 5 |
 | UI | React 19 + Radix UI + Tailwind CSS v3 |
 | Forms | `react-hook-form` + Zod validation |
-| ORM | Prisma 6.x |
-| Database | SQLite (file: [prisma/dev.db](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/prisma/dev.db)) |
+| ORM | Prisma 6.x (6.19.2) |
+| Database | SQLite (file: [prisma/dev.db](file:///c:/Users/teamt/bjs-equiptrack-demo/prisma/dev.db)) |
 | Icons | `lucide-react` |
 | Containerization | Docker (multi-stage) + Docker Compose |
 | Runtime | Node.js 22 Alpine |
 
 ---
 
-## Database Schema (3 Models)
+## Database Schema (4 Models)
 
-Defined in [prisma/schema.prisma](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/prisma/schema.prisma).
+Defined in [prisma/schema.prisma](file:///c:/Users/teamt/bjs-equiptrack-demo/prisma/schema.prisma).
 
 ```mermaid
 erDiagram
     TeamMember {
         Int id PK
         String name
+        String department
+        String status
     }
 
     InventoryItem {
@@ -66,6 +68,16 @@ erDiagram
         Int checkedOutById FK
         String checkedOutDate
         String checkedInDate
+        String assetNumber
+        String serialNumber
+        Int locationId FK
+    }
+
+    Location {
+        Int id PK
+        String building
+        String department
+        String storageArea
     }
 
     InventoryLog {
@@ -79,11 +91,16 @@ erDiagram
     }
 
     TeamMember ||--o{ InventoryItem : "holds (checked out)"
+    Location ||--o{ InventoryItem : "stores"
 ```
 
 ### Key Design Notes
 - **`InventoryItem.status`** is a `String` (not an enum) — values are `"Available"` or `"Checked Out"`.
-- **`InventoryLog`** is an **immutable append-only ledger**. Every `CHECKOUT` and `CHECKIN` event writes a new row. Team member name and item name are **denormalized** into the log row (so history survives deletions).
+- **`InventoryLog`** is an **immutable append-only ledger**. Every `CHECKOUT`, `CHECKIN`, `REASSIGN`, `RETURN`, and `CORRECT` event writes a new row. Team member name and item name are **denormalized** into the log row (so history survives deletions).
+- **Optional Fields**:
+  - `TeamMember.department` and `TeamMember.status` are optional.
+  - `InventoryItem.checkedOutBy`, `InventoryItem.checkedOutById`, `InventoryItem.checkedOutDate`, `InventoryItem.checkedInDate`, `InventoryItem.assetNumber`, `InventoryItem.serialNumber`, and `InventoryItem.locationId` are optional.
+  - `InventoryLog.teamMemberId` and `InventoryLog.teamMemberName` are optional.
 - **No auth model** — the system is currently open/un-authenticated.
 - **No soft-delete** — items are hard deleted.
 - Dates (`checkedOutDate`, `checkedInDate`) are stored as `String` (ISO 8601), not native `DateTime`.
@@ -99,57 +116,58 @@ erDiagram
 | `/checkin` | RSC + Client | Select items to return to inventory |
 | `/inventory` | RSC + Client | Browse all items, filter Available / Checked Out |
 | `/history` | RSC | View last 100 checkout/checkin events |
+| `/members` | RSC + Client | Team Members roster view and edit team members |
 | `/audit` | RSC + Client | Audit view (per-member equipment) |
 | `/api/export/history` | Route Handler | CSV download of transaction history |
 
-All routes under `/(app)/` share a layout wrapper ([layout.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/layout.tsx)).
+All routes under `/(app)/` share a layout wrapper ([layout.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/layout.tsx)).
 
 ---
 
 ## Feature Breakdown
 
 ### 1. Equipment Checkout
-**Files**: [/checkout/page.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/(app)/checkout/page.tsx), [actions.ts#checkOutEquipment](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/actions.ts)
+**Files**: [/checkout/page.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/(app)/checkout/page.tsx), [actions.ts#checkOutEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts)
 
-- User selects a team member from a dropdown (RSC pre-fetches all [TeamMember](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/lib/types.ts#1-5) records).
+- User selects a team member from a dropdown (RSC pre-fetches all [TeamMember](file:///c:/Users/teamt/bjs-equiptrack-demo/src/lib/types.ts#L1-L5) records).
 - Multi-select checkboxes for available items.
-- On submit → Server Action [checkOutEquipment(teamMemberId, itemIds[])](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/actions.ts#41-101):
+- On submit → Server Action [checkOutEquipment(teamMemberId, itemIds[])](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L41-L101):
   1. Validates all items are still `"Available"`.
   2. Runs a `prisma.$transaction()` that:
-     - Updates each [InventoryItem](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/lib/types.ts#6-15) status → `"Checked Out"` and records who/when.
+     - Updates each [InventoryItem](file:///c:/Users/teamt/bjs-equiptrack-demo/src/lib/types.ts#L6-L15) status → `"Checked Out"` and records who/when.
      - Inserts an `InventoryLog` row per item with action `"CHECKOUT"`.
   3. Calls `revalidatePath()` on all affected routes to purge Next.js cache.
 
 ### 2. Equipment Check-In
-**Files**: [/checkin/page.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/(app)/checkin/page.tsx), [actions.ts#checkInEquipment](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/actions.ts)
+**Files**: [/checkin/page.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/(app)/checkin/page.tsx), [actions.ts#checkInEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts)
 
 - Shows only items with `status = "Checked Out"`.
-- On submit → [checkInEquipment(itemIds[])](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/actions.ts#102-162):
+- On submit → [checkInEquipment(itemIds[])](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L102-L162):
   1. Validates items are not already available.
   2. Atomic transaction: resets item status, clears checkout fields, logs `"CHECKIN"` event (preserving the original holder's name in the log).
 
 ### 3. Inventory View
-**File**: [/inventory/page.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/(app)/inventory/page.tsx)
+**File**: [/inventory/page.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/(app)/inventory/page.tsx)
 
 - Displays all inventory items with their live status.
-- Filterable by [Available](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/lib/data.ts#46-59) / `Checked Out`.
-- Uses [getInventoryItems()](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/lib/data.ts#17-28) from the DAL.
+- Filterable by [Available](file:///c:/Users/teamt/bjs-equiptrack-demo/src/lib/data.ts#L46-L59) / `Checked Out`.
+- Uses [getInventoryItems()](file:///c:/Users/teamt/bjs-equiptrack-demo/src/lib/data.ts#L17-L28) from the DAL.
 
 ### 4. Transaction History
-**File**: [/history/page.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/(app)/history/page.tsx)
+**File**: [/history/page.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/(app)/history/page.tsx)
 
 - Renders last **100** `InventoryLog` rows, ordered by `timestamp DESC`.
 - Color-coded badges: blue for CHECKOUT, green for CHECKIN.
 - **Export to CSV** button → hits `/api/export/history` which streams a CSV response.
 
 ### 5. Audit View
-**File**: [/audit/page.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/(app)/audit/page.tsx)
+**File**: [/audit/page.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/(app)/audit/page.tsx)
 
 - Per-member view: shows which items each team member currently holds.
 - Useful for accountability / damage tracking.
 
 ### 6. Data Management (Home Page Controls)
-**Files**: [home-management-controls.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/_components/home-management-controls.tsx), [management-sheets.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/_components/management-sheets.tsx), [bulk-import-sheet.tsx](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/src/app/_components/bulk-import-sheet.tsx)
+**Files**: [home-management-controls.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/_components/home-management-controls.tsx), [management-sheets.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/_components/management-sheets.tsx), [bulk-import-sheet.tsx](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/_components/bulk-import-sheet.tsx)
 
 Three slide-in Sheet panels available from the home screen:
 
@@ -239,9 +257,9 @@ graph LR
 
 - **Port**: `9002`
 - **Database**: SQLite file mounted via Docker volume at `./prisma:/app/prisma`
-- **Entrypoint** ([docker-entrypoint.sh](file:///home/tt/Desktop/Development/BJs-EquipTrack-1/docker-entrypoint.sh)): Initializes DB if missing, then runs `node server.js`
+- **Entrypoint** ([docker-entrypoint.sh](file:///c:/Users/teamt/bjs-equiptrack-demo/docker-entrypoint.sh)): Initializes DB if missing, then runs `node server.js`
 - **Timezone**: `America/New_York`
-- **Image**: `teamturnersolutions/equiptrack:2.0`
+- **Image**: `teamturnersolutions/equiptrack:demov3`
 
 > [!NOTE]
 > Because the DB is a **volume-mounted SQLite file**, data persists across container restarts. This is an important operational dependency — if the volume is lost, so is all data.
