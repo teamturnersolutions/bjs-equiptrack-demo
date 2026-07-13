@@ -129,7 +129,7 @@ export async function checkOutEquipment(teamMemberId: number, itemIds: number[])
         const updated = await tx.inventoryItem.update({
           where: { id: item.id },
           data: {
-            status: 'Assigned',
+            status: 'Checked Out',
             checkedOutBy: teamMember.name,
             checkedOutById: teamMember.id,
             checkedOutDate: timestamp,
