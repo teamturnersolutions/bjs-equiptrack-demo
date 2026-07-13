@@ -1,7 +1,6 @@
 # BJ's EquipTrack Systems Flow
 
-This document provides a visual representation and walkthrough of the systems flow for BJ's EquipTrack, a containerized inventory management application built with Next.js 15, SQLite, and Prisma.
-
+This document provides a visual representation and walkthrough of the systems flow for BJ's EquipTrack, a containerized inventory management application built with Next.js 15, PostgreSQL, and Prisma.
 ## Systems Flow Diagram
 
 The diagram below depicts how users and administrators interact with the application, its internal components, and the underlying data storage within a Docker container.
@@ -11,19 +10,19 @@ graph TD
     User([User / Staff]) -->|Interacts with| WebUI[Next.js Frontend]
     WebUI -->|Triggers| Actions[Next.js Server Actions]
     Actions -->|Queries/Updates| Prisma[Prisma ORM]
-    Prisma -->|Reads/Writes| SQLite[(SQLite Database)]
+    Prisma -->|Reads/Writes| PostgreSQL[(PostgreSQL Database)]
 
     subgraph DockerContainer ["Docker Container (EquipTrack)"]
         WebUI
         Actions
         Prisma
-        SQLite
+        PostgreSQL
         Scripts[Maintenance Scripts]
         ExportAPI[Export API]
     end
 
-    Scripts -->|Cleans/Imports| SQLite
-    ExportAPI -->|Reads| SQLite
+    Scripts -->|Cleans/Imports| PostgreSQL
+    ExportAPI -->|Reads| PostgreSQL
     ExportAPI -->|Downloads CSV| User
 
     Admin([Admin]) -->|Runs| Scripts
@@ -39,9 +38,9 @@ The user interface, accessible at `http://localhost:9002`, provides dedicated vi
 
 Next.js Server Actions handle business logic, such as [checkOutEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L41-L101) and [checkInEquipment](file:///c:/Users/teamt/bjs-equiptrack-demo/src/app/actions.ts#L102-L162), providing a secure bridge between the frontend and the database.
 
-### 3. **Prisma ORM & SQLite**
+### 3. **Prisma ORM & PostgreSQL**
 
-Prisma acts as the data access layer, managing schemas and performing type-safe queries on a local SQLite database file ([dev.db](file:///c:/Users/teamt/bjs-equiptrack-demo/prisma/dev.db)). This file is persisted using Docker volumes.
+Prisma acts as the data access layer, managing schemas and performing type-safe queries on a PostgreSQL database. This data is persisted using Docker volumes.
 
 ### 4. **Export API**
 
@@ -56,6 +55,6 @@ A collection of utility scripts, such as `migrate-csv.ts` and `cleanup-logs.ts`,
 | Feature              | Status                                                            |
 | :------------------- | :---------------------------------------------------------------- |
 | **Containerization** | Fully Dockerized for zero-dependency deployment.                  |
-| **Persistence**      | SQLite database persists via host-mounted volumes.                |
+| **Persistence**      | PostgreSQL database persists via host-mounted volumes.                |
 | **Data Integrity**   | Prisma ORM ensures consistent data models for tracking equipment. |
 | **Exportability**    | Built-in CSV export for all transaction logs.                     |

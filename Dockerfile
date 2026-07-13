@@ -1,4 +1,4 @@
-# Multi-stage Dockerfile for Next.js with Prisma/SQLite
+# Multi-stage Dockerfile for Next.js with Prisma/PostgreSQL
 
 # 1. Install dependencies
 FROM node:22-alpine AS deps

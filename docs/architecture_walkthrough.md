@@ -15,7 +15,7 @@ graph TD
     SA["Server Actions\n(src/app/actions.ts)"]
     DAL["Data Access Layer\n(src/lib/data.ts)"]
     Prisma["Prisma ORM\n(@prisma/client)"]
-    DB["SQLite Database\n(prisma/dev.db)"]
+    DB["PostgreSQL Database"]
 
     Browser -->|"HTTP GET (page load)"| RSC
     RSC -->|"Direct DB call"| DAL
@@ -270,7 +270,7 @@ graph LR
 
 | ✅ Strengths | ⚠️ Limitations |
 |---|---|
-| Zero-overhead, no API layer needed | SQLite is single-writer; no concurrent writes from multiple processes |
+| Zero-overhead, no API layer needed | PostgreSQL requires a dedicated container (not zero-config) |
 | Server Actions make mutations type-safe | No authentication/authorization layer |
 | Atomic transactions prevent partial state | History capped at 100 rows in UI (DB stores all) |
 | Full audit trail via `InventoryLog` | Dates stored as strings, not `DateTime` (minor) |

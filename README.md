@@ -45,7 +45,7 @@ EquipTrack uses a modern, lightweight, full-stack monolithic architecture design
 2. **Next.js:** The framework driving the application. It serves pre-rendered pages via React Server Components (RSCs) for high speed, manages layouts, and coordinates routing between pages.
 3. **Application Logic:** The core business rules of the platform (implemented as Next.js Server Actions). It validates that items are available before a checkout, coordinates multi-item transactions, and formats audit logs.
 4. **Prisma ORM:** The data access layer. It translates TypeScript code into optimized database queries, ensuring type safety and handling automated schema migrations.
-5. **SQLite:** The physical database engine. It runs in-process as a lightweight, zero-configuration file, offering high speed and simple backups without the overhead of external database servers.
+5. **PostgreSQL:** The robust database engine. It runs in a dedicated container, offering high concurrency, secure backups, and enterprise-grade scalability.
 
 ---
 
@@ -64,10 +64,10 @@ For non-technical stakeholders, software terms can feel like a foreign language.
 | **Database Models** | **Filing Cabinet Labels** | The designated labels on drawer fronts (e.g., "Employees", "Equipment") that define what goes where. |
 | **Queries** | **The Filing Clerk** | The act of going into the records room to pull out specific files (e.g., "Get me the history of checked-out iPads"). |
 | **Migrations** | **Renovating the Filing System** | Reorganizing the files or adding new drawers to the cabinets without losing or scrambling any of the existing papers. |
-| **SQLite** | **The Filing Cabinet** | The physical cabinet where all files, records, and logs are organized and stored in one unit. |
+| **PostgreSQL** | **The Filing Cabinet** | The physical cabinet where all files, records, and logs are organized and stored in one unit. |
 | **Tailwind CSS** | **Interior Design** | The paint, font choices, buttons, and visual styling that make the application clean, modern, and pleasant to use. |
 | **Docker** | **The Shipping Container** | A standard container holding the office, furniture, and records cabinet. It allows you to ship the entire application and run it anywhere instantly. |
-| **SQLite Database File** | **The Records Room** | The specific secure room inside the shipping container where the filing cabinet resides, keeping all database records safe. |
+| **PostgreSQL Database Container** | **The Records Room** | The specific secure room alongside the application container where the filing cabinet resides, keeping all database records safe. |
 
 <div align="center">
 
@@ -194,7 +194,7 @@ The roadmap guides EquipTrack from its current lightweight state to an enterpris
 | **Equipment Tracking** (Live status updates) | **Role-Based Access Control** (Secure logins & permissions) |
 | **Assignments** (Mapping equipment to members) | **Audit Logging** (Immutable records of administrative edits) |
 | **Administrative Portal** (Manual status corrections) | **Advanced Reporting** (Usage trends & utilization charts) |
-| **SQLite Persistence** (Zero-configuration file DB) | **PostgreSQL Support** (For high-concurrency enterprise deployments) |
+| **PostgreSQL Persistence** (Enterprise-grade database container) | **High Availability** (For failover enterprise deployments) |
 | **Docker Deployment** (Native AMD64 & ARM64 builds) | **Mobile Enhancements** (Native scanner integrations & offline sync) |
 | **Bulk Data Import** (Import members/items via CSV) | **AI Assistant Integration** (Natural language query interface) |
 | | **Preventative Maintenance** (Inspections & lifecycle tracking) |
