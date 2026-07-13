@@ -18,7 +18,7 @@ services:
 
   app:
     build: .
-    image: teamturnersolutions/equiptrack:prodv3
+    image: teamturnersolutions/equiptrack:prod-v1
     ports:
       - "9002:9002"
     volumes:

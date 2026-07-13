@@ -126,7 +126,7 @@ docker run -d \
   -e NEXTAUTH_SECRET="bjs-equiptrack-enterprise-secret-2026-key" \
   -e NEXTAUTH_URL="http://localhost:9002" \
   --restart unless-stopped \
-  teamturnersolutions/equiptrack:prodv3
+  teamturnersolutions/equiptrack:prod-v1
 ```
 
 ### Option 2: Run with Docker Compose

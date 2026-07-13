@@ -259,7 +259,7 @@ graph LR
 - **Database**: PostgreSQL container with pgdata persistent volume
 - **Entrypoint** ([docker-entrypoint.sh](file:///c:/Users/teamt/bjs-equiptrack-demo/docker-entrypoint.sh)): Runs schema updates and seeds defaults, then runs standalone Next.js server
 - **Timezone**: `America/New_York`
-- **Image**: `teamturnersolutions/equiptrack:prodv3`
+- **Image**: `teamturnersolutions/equiptrack:prod-v1`
 
 > [!NOTE]
 > PostgreSQL database data persists within a Docker-managed volume (`pgdata`), protecting database state between container restarts.
