@@ -7,16 +7,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2, ArrowLeft, Save, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-import { Univer, UniverInstanceType } from "@univerjs/core";
+import { Univer, UniverInstanceType, LocaleType, mergeLocales } from "@univerjs/core";
 import { UniverRenderEnginePlugin } from "@univerjs/engine-render";
 import { UniverFormulaEnginePlugin } from "@univerjs/engine-formula";
 import { UniverUIPlugin } from "@univerjs/ui";
 import { UniverSheetsPlugin } from "@univerjs/sheets";
 import { UniverSheetsUIPlugin } from "@univerjs/sheets-ui";
+import { UniverDocsPlugin } from "@univerjs/docs";
+import { UniverDocsUIPlugin } from "@univerjs/docs-ui";
+
+import DesignEnUS from '@univerjs/design/locale/en-US';
+import UIEnUS from '@univerjs/ui/locale/en-US';
+import SheetsEnUS from '@univerjs/sheets/locale/en-US';
+import SheetsUIEnUS from '@univerjs/sheets-ui/locale/en-US';
+import DocsUIEnUS from '@univerjs/docs-ui/locale/en-US';
 
 import "@univerjs/design/lib/index.css";
 import "@univerjs/ui/lib/index.css";
 import "@univerjs/sheets-ui/lib/index.css";
+import "@univerjs/docs-ui/lib/index.css";
 
 type InventoryItem = {
   id: number;
@@ -64,10 +73,27 @@ export default function WorkspaceClient() {
     // Clean up previous instance
     if (univerRef.current) {
       univerRef.current.dispose();
+      univerRef.current = null;
+    }
+
+    // Explicitly clear container innerHTML to ensure no residual DOM elements exist
+    if (containerRef.current) {
+      containerRef.current.innerHTML = "";
     }
 
     try {
-      const univer = new Univer();
+      const univer = new Univer({
+        locale: LocaleType.EN_US,
+        locales: {
+          [LocaleType.EN_US]: mergeLocales(
+            DesignEnUS,
+            UIEnUS,
+            SheetsEnUS,
+            SheetsUIEnUS,
+            DocsUIEnUS
+          ),
+        },
+      });
 
       univer.registerPlugin(UniverRenderEnginePlugin);
       univer.registerPlugin(UniverFormulaEnginePlugin);
@@ -78,6 +104,8 @@ export default function WorkspaceClient() {
       });
       univer.registerPlugin(UniverSheetsPlugin);
       univer.registerPlugin(UniverSheetsUIPlugin);
+      univer.registerPlugin(UniverDocsPlugin);
+      univer.registerPlugin(UniverDocsUIPlugin);
 
       // Build cell data
       const cellData: Record<number, Record<number, { v: string }>> = {
@@ -145,10 +173,11 @@ export default function WorkspaceClient() {
       const rows = snapshot.cellData;
 
       const updatedItems: any[] = [];
-      const rowCount = Object.keys(rows).length;
+      const rowKeys = Object.keys(rows).map(Number).filter(n => !isNaN(n));
+      const maxRow = rowKeys.length > 0 ? Math.max(...rowKeys) : 0;
 
       // Parse spreadsheet rows back into JSON items
-      for (let i = 1; i < rowCount; i++) {
+      for (let i = 1; i <= maxRow; i++) {
         const row = rows[i];
         if (!row) continue;
 
@@ -158,10 +187,22 @@ export default function WorkspaceClient() {
         const serialVal = row[3]?.v;
         const statusVal = row[4]?.v;
 
-        if (idVal) {
+        // Skip completely empty rows
+        if (!nameVal && !assetVal && !serialVal) continue;
+
+        const parsedId = idVal ? parseInt(idVal) : null;
+        if (parsedId && !isNaN(parsedId)) {
           updatedItems.push({
-            id: parseInt(idVal),
-            name: nameVal || "",
+            id: parsedId,
+            name: nameVal || "Unnamed Item",
+            assetNumber: assetVal || null,
+            serialNumber: serialVal || null,
+            status: statusVal || "Available",
+          });
+        } else {
+          // New item (no ID or non-numeric ID)
+          updatedItems.push({
+            name: nameVal || "Unnamed Item",
             assetNumber: assetVal || null,
             serialNumber: serialVal || null,
             status: statusVal || "Available",
@@ -224,19 +265,23 @@ export default function WorkspaceClient() {
             Modify cell values directly. Press Enter or tab out to commit edits in the cell before saving. IDs are read-only.
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <CardContent className="p-0 relative min-h-[600px]">
+          {loading && (
+            <div 
+              key="univer-loader-overlay"
+              className="absolute inset-0 flex flex-col items-center justify-center bg-[#141214] z-50 space-y-4 rounded-b-lg"
+            >
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
               <p className="text-sm text-muted-foreground">Initializing Univer core engines...</p>
             </div>
-          ) : (
+          )}
+          <div key="univer-isolation-wrapper" className="w-full h-[600px]">
             <div 
               ref={containerRef} 
               id="univer-container" 
-              className="w-full h-[600px] rounded-b-lg overflow-hidden border-t border-white/5" 
+              className="w-full h-full rounded-b-lg overflow-hidden border-t border-white/5" 
             />
-          )}
+          </div>
         </CardContent>
       </Card>
     </div>
